@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+    <h2>Chat App</h2>
     <form onsubmit="signup(event)" method="POST">
        <label for="name">Enter name</label>
        <input type="text" id="name" name="name" required />
@@ -33,15 +34,21 @@
                     password: e.target.password.value
                 };
                 console.log(signUpDetails)
-                const response = axios.post('http://localhost:7000/user/signup', signUpDetails)
+                const response = await axios.post('http://localhost:7000/user/signup', signUpDetails)
                 if(response.status === 201) {
-                    window.location.href = "/login/login.html"
+                    alert('Successfully signed up');
+                    window.location.href = "/login.html"
                 } else {
                     throw new Error('Failed to login')
                 }
    
             }catch(err){
-                document.body.innerHTML += `<div style="color:red;">${err} <div>`;
+                console.error('Error:', err);
+                if (err.response && err.response.status === 400) {
+                    alert('User already exists, Please Login');
+                } else {
+                    document.body.innerHTML += `<div style="color:red;">${err} <div>`;
+                }
             }
         }
     </script>
